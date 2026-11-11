@@ -1,0 +1,17 @@
+{
+  "base": {
+    "logo": "",
+    "project": "toolshop_diploma",
+    "environment": "qa.guru",
+    "comment": "Toolshop UI+API",
+    "reportLink": "",
+    "language": "en",
+    "allureFolder": "allure-report",
+    "enableChart": true
+  },
+  "telegram": {
+    "token": "TELEGRAM_BOT_TOKEN",
+    "chat": "TELEGRAM_CHAT_ID",
+    "replyTo": ""
+  }
+}

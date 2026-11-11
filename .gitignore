@@ -1,0 +1,14 @@
+.env
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+allure-results/
+allure-report/
+.idea/
+.DS_Store
+*.log
+
+notifications/config.json
+notifications/*.jar
