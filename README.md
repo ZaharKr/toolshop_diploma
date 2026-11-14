@@ -1,45 +1,60 @@
 # Toolshop — UI + API автотесты
 
-Автоматизация интернет-магазина [Practice Software Testing](https://practicesoftwaretesting.com)  
-(Python, Selenium, Pytest, Requests, Pydantic, Allure, Selenoid, Jenkins, Telegram).
+Автоматизация [Practice Software Testing / Toolshop](https://practicesoftwaretesting.com)  
+Python · Pytest · Selenium · Requests · Pydantic · Allure · Selenoid · Jenkins · Telegram
 
 ![Toolshop home](media/toolshop_home.png)
 
-![Python](https://img.shields.io/badge/Python-3.x-blue)
-![Pytest](https://img.shields.io/badge/Pytest-8.x-red)
-![Selenium](https://img.shields.io/badge/Selenium-4.x-green)
-![Requests](https://img.shields.io/badge/Requests-API-orange)
-![Pydantic](https://img.shields.io/badge/Pydantic-2.x-purple)
-![Allure](https://img.shields.io/badge/Allure-2.x-orange)
-![Selenoid](https://img.shields.io/badge/Selenoid-Docker-blueviolet)
-![Jenkins](https://img.shields.io/badge/Jenkins-CI-yellow)
-![Telegram](https://img.shields.io/badge/Telegram-notifications-blue)
+<p align="left">
+  <img src="https://img.shields.io/badge/Python-3.x-blue" alt="Python">
+  <img src="https://img.shields.io/badge/Pytest-8.x-red" alt="Pytest">
+  <img src="https://img.shields.io/badge/Selenium-4.x-green" alt="Selenium">
+  <img src="https://img.shields.io/badge/Requests-API-orange" alt="Requests">
+  <img src="https://img.shields.io/badge/Pydantic-2.x-purple" alt="Pydantic">
+  <img src="https://img.shields.io/badge/Allure-2.x-orange" alt="Allure">
+  <img src="https://img.shields.io/badge/Selenoid-Docker-blueviolet" alt="Selenoid">
+  <img src="https://img.shields.io/badge/Jenkins-CI-yellow" alt="Jenkins">
+  <img src="https://img.shields.io/badge/Telegram-notifications-blue" alt="Telegram">
+</p>
 
-- **UI:** https://practicesoftwaretesting.com  
-- **API / Swagger:** https://api.practicesoftwaretesting.com/api/documentation  
-- **GitHub:** https://github.com/ZaharKr/toolshop_diploma  
-- **Jenkins:** https://jenkins.qa.guru/job/ZaharKr_toolshop_diploma/  
-- **Allure:** https://jenkins.qa.guru/job/ZaharKr_toolshop_diploma/allure  
-- **TestOps:** https://allure.qa.guru/project/5432/test-cases  
+| | |
+|---|---|
+| UI | https://practicesoftwaretesting.com |
+| API / Swagger | https://api.practicesoftwaretesting.com/api/documentation |
+| GitHub | https://github.com/ZaharKr/toolshop_diploma |
+| Jenkins | https://jenkins.qa.guru/job/ZaharKr_toolshop_diploma/ |
+| Allure | https://jenkins.qa.guru/job/ZaharKr_toolshop_diploma/allure |
+| TestOps | https://allure.qa.guru/project/5432/test-cases |
+| Mobile | https://github.com/ZaharKr/mobile_tests |
 
-## Стек
+## Содержание
 
-Python · Pytest · Selenium WebDriver · Requests · Pydantic · Allure Report · Selenoid · Jenkins · Telegram (allure-notifications 4.11.1)
+- [Покрытие](#покрытие)
+- [Структура](#структура)
+- [Локальный запуск](#локальный-запуск)
+- [Jenkins](#jenkins)
+- [Allure Report](#allure-report)
+- [Allure TestOps](#allure-testops)
+- [Сценарий UI](#сценарий-ui)
+- [Mobile](#mobile)
 
 ## Покрытие
+
+**13 автотестов** в одном репозитории: **8 UI** + **5 API**.  
+Перед частью UI-сценариев — подготовка сессии и корзины по API (JWT → `localStorage`, cart → `sessionStorage`).
 
 ### UI
 
 | Сценарий | Что проверяет |
 |----------|---------------|
-| Успешный логин | Вход в аккаунт, меню пользователя |
+| Успешный логин | Вход, меню пользователя |
 | Невалидный логин | Ошибка при неверных данных |
-| Поиск | Результаты поиска по названию |
+| Поиск | Результаты по названию |
 | Категория | Фильтр каталога |
-| Карточка товара | Открытие product page |
-| Корзина (API → UI) | Сессия и товар из API уже в UI |
-| Add to cart | Добавление товара после API-login |
-| Профиль | Меню после записи JWT в localStorage |
+| Карточка товара | Product page |
+| Корзина (API → UI) | Товар из API уже в UI |
+| Add to cart | Добавление после API-login |
+| Профиль | Меню после JWT в localStorage |
 
 ### API
 
@@ -51,8 +66,7 @@ Python · Pytest · Selenium WebDriver · Requests · Pydantic · Allure Report 
 | POST | `/carts` + add item |
 | DELETE | cart product / cart |
 
-Тела запросов и ответы описаны pydantic-моделями.  
-Перед UI-сценариями: login → JWT в `localStorage`, корзина → `sessionStorage`.
+Request/response — pydantic-модели. Page Object для UI.
 
 ## Структура
 
@@ -61,13 +75,15 @@ toolshop_diploma/
   pages/          # Page Object
   api/            # HTTP-клиент
   models/         # pydantic
-  utils/          # attach, session prep
+  utils/          # Allure attach, API-prep для UI
 tests/
   ui/
   api/
+media/            # скрины, GIF
+jenkins/          # shell для CI
 ```
 
-## Установка
+## Локальный запуск
 
 ```bash
 git clone https://github.com/ZaharKr/toolshop_diploma.git
@@ -78,53 +94,32 @@ pip install -r requirements.txt
 cp .env.example .env
 ```
 
-В `.env` — логин/пароль Selenoid:
+`.env`:
 
 ```env
 SELENOID_LOGIN=user1
 SELENOID_PASSWORD=1234
 ```
 
-## Запуск
-
-Все тесты:
-
 ```bash
+# все
 pytest
-```
 
-Только API:
-
-```bash
+# только API
 pytest -m api
-```
 
-Только UI (Selenoid):
-
-```bash
+# только UI в Selenoid
 pytest -m ui \
   --base-url=https://practicesoftwaretesting.com \
   --remote-url=https://selenoid.qa.guru/wd/hub \
   --browser=chrome \
   --browser-version=156.0 \
   --window-size=1920x1080
-```
 
-| Ключ | Описание |
-|------|----------|
-| `--base-url` | UI |
-| `--api-url` | API base (фикстура клиента) |
-| `--remote-url` | Selenoid hub |
-| `--browser` / `--browser-version` | chrome / firefox |
-| `--window-size` | например `1920x1080` |
-
-### Allure
-
-```bash
 allure serve allure-results
 ```
 
-В отчёте: steps, screenshot, page source, browser logs, video (Selenoid).
+В Allure: steps, screenshot, page source, browser logs, video (Selenoid).
 
 ## Jenkins
 
@@ -132,11 +127,11 @@ Job: https://jenkins.qa.guru/job/ZaharKr_toolshop_diploma/
 
 1. Freestyle, label `python`
 2. Git → этот репозиторий, `*/main`
-3. Parameters: `SUITE` (`api` / `ui` / `all`), `BROWSER`, `BROWSER_VERSION`, `WINDOW_SIZE`
+3. Parameters: `SUITE` (`api` / `ui` / `all`), `BROWSER`, `BROWSER_VERSION`, `WINDOW_SIZE`, `BASE_URL`
 4. Create Text File → `.env` (Selenoid)
 5. Shell — `jenkins/job-shell.sh`
 6. Post-build: Allure Report (`allure-results`)
-7. Telegram: allure-notifications **4.11.1** (token в credentials Jenkins)
+7. Telegram: allure-notifications **4.11.1**
 
 <img src="media/jenkins-params.png" width="720" alt="Jenkins parameters">
 
@@ -144,12 +139,23 @@ Job: https://jenkins.qa.guru/job/ZaharKr_toolshop_diploma/
 
 <img src="media/allure-overview.png" width="720" alt="Allure overview">
 
-## Allure TestOps / Jira
+## Allure TestOps
 
-Автопрогоны и ручные кейсы: [TestOps](https://allure.qa.guru/project/5432/test-cases).  
-Связь с задачами: [Jira qa.guru](https://jira.qa.guru/).
+Проект: https://allure.qa.guru/project/5432/test-cases  
+
+Ручные кейсы (smoke, регистрация, корзина, поиск, язык) + автопрогоны из Jenkins.
+
+<img src="media/testops-cases.png" width="720" alt="TestOps test cases">
+
+Jira: https://jira.qa.guru/
+
+## Сценарий UI
+
+Поиск → карточка → корзина:
+
+<img src="media/toolshop_flow.gif" width="720" alt="Toolshop UI flow">
 
 ## Mobile
 
 Отдельный репозиторий: [mobile_tests](https://github.com/ZaharKr/mobile_tests)  
-(Appium, Wikipedia, BrowserStack + local).
+Appium · Wikipedia · BrowserStack + local · pydantic-конфиги.
