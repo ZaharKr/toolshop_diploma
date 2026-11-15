@@ -149,7 +149,9 @@ Job: https://jenkins.qa.guru/job/ZaharKr_toolshop_diploma/
 
 <img src="media/testops-cases.png" width="720" alt="TestOps test cases">
 
-Jira: https://jira.qa.guru/ (линк TestOps ↔ Jira — см. `media/jira-link.png`)
+Jira: [MUL-80](https://jira.qa.guru/browse/MUL-80) — задача диплома + ссылка на TestOps.
+
+<img src="media/jira-link.png" width="720" alt="Jira MUL-80 linked to TestOps">
 
 ## Telegram
 
