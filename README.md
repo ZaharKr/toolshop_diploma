@@ -1,7 +1,7 @@
 # Toolshop — UI + API автотесты
 
 Автоматизация [Practice Software Testing / Toolshop](https://practicesoftwaretesting.com)  
-Python · Pytest · Selenium · Requests · Pydantic · Allure · Selenoid · Jenkins · Telegram
+Python · Pytest · Selenium · Requests · Pydantic · JSON Schema · Allure · Selenoid · Jenkins · Telegram
 
 ![Toolshop home](media/toolshop_home.png)
 
@@ -11,10 +11,27 @@ Python · Pytest · Selenium · Requests · Pydantic · Allure · Selenoid · Je
   <img src="https://img.shields.io/badge/Selenium-4.x-green" alt="Selenium">
   <img src="https://img.shields.io/badge/Requests-API-orange" alt="Requests">
   <img src="https://img.shields.io/badge/Pydantic-2.x-purple" alt="Pydantic">
+  <img src="https://img.shields.io/badge/JSON%20Schema-validation-success" alt="JSON Schema">
   <img src="https://img.shields.io/badge/Allure-2.x-orange" alt="Allure">
   <img src="https://img.shields.io/badge/Selenoid-Docker-blueviolet" alt="Selenoid">
   <img src="https://img.shields.io/badge/Jenkins-CI-yellow" alt="Jenkins">
   <img src="https://img.shields.io/badge/Telegram-notifications-blue" alt="Telegram">
+</p>
+
+### Используемые инструменты
+
+<p align="left">
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" width="40" height="40" alt="Python"/>
+  &nbsp;
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pytest/pytest-original.svg" width="40" height="40" alt="Pytest"/>
+  &nbsp;
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/selenium/selenium-original.svg" width="40" height="40" alt="Selenium"/>
+  &nbsp;
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" width="40" height="40" alt="Docker / Selenoid"/>
+  &nbsp;
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jenkins/jenkins-original.svg" width="40" height="40" alt="Jenkins"/>
+  &nbsp;
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" width="40" height="40" alt="GitHub"/>
 </p>
 
 | | |
@@ -25,6 +42,7 @@ Python · Pytest · Selenium · Requests · Pydantic · Allure · Selenoid · Je
 | Jenkins | https://jenkins.qa.guru/job/ZaharKr_toolshop_diploma/ |
 | Allure | https://jenkins.qa.guru/job/ZaharKr_toolshop_diploma/allure |
 | TestOps | https://allure.qa.guru/project/5432/test-cases |
+| Jira | https://jira.qa.guru/browse/MUL-80 |
 | Mobile | https://github.com/ZaharKr/mobile_tests |
 | Mobile Jenkins | https://jenkins.qa.guru/job/ZaharKr_mobile_tests/10/ |
 
@@ -36,14 +54,27 @@ Python · Pytest · Selenium · Requests · Pydantic · Allure · Selenoid · Je
 - [Jenkins](#jenkins)
 - [Allure Report](#allure-report)
 - [Allure TestOps](#allure-testops)
+- [Jira](#jira)
 - [Telegram](#telegram)
 - [Сценарий UI](#сценарий-ui)
 - [Mobile](#mobile)
 
 ## Покрытие
 
-**13 автотестов** в одном репозитории: **8 UI** + **5 API**.  
-Перед частью UI-сценариев — подготовка сессии и корзины по API (JWT → `localStorage`, cart → `sessionStorage`).
+**16 автотестов** в одном репозитории: **8 UI** + **8 API**.  
+Перед частью UI-сценариев — подготовка сессии и корзины по API (JWT → `localStorage`, cart → `sessionStorage`).  
+Ответы API дополнительно валидируются по **JSON Schema**.
+
+### Список проверок (API)
+
+1. Успешный логин → `access_token` + schema
+2. Логин с неверным паролем → 400/401 + schema
+3. Регистрация уникального пользователя + логин
+4. Список продуктов + schema
+5. Продукт по id + schema
+6. Несуществующий продукт → 404 + schema
+7. Создание корзины и добавление товара + schema
+8. Удаление товара из корзины и удаление корзины
 
 ### UI
 
@@ -60,29 +91,31 @@ Python · Pytest · Selenium · Requests · Pydantic · Allure · Selenoid · Je
 
 ### API
 
-| Метод | Endpoint |
-|-------|----------|
-| GET | `/products` |
-| GET | `/products/{id}` |
-| POST | `/users/login` |
-| POST | `/carts` + add item |
-| DELETE | cart product / cart |
+| Метод | Endpoint | Schema |
+|-------|----------|--------|
+| POST | `/users/login` | `login_response.json` / `error.json` |
+| POST | `/users/register` | `register_response.json` |
+| GET | `/products` | `products_list.json` |
+| GET | `/products/{id}` | `product.json` / `error.json` |
+| POST | `/carts` + add item | `cart_create.json` / `cart.json` |
+| DELETE | cart product / cart | — |
 
-Request/response — pydantic-модели. Page Object для UI.
+Request/response — pydantic-модели + JSON Schema. Page Object для UI.
 
 ## Структура
 
 ```
 toolshop_diploma/
-  pages/          # Page Object
-  api/            # HTTP-клиент
-  models/         # pydantic
-  utils/          # Allure attach, API-prep для UI
+  pages/            # Page Object
+  api/              # HTTP-клиент
+  models/           # pydantic
+  json_schemas/     # контракты ответов API
+  utils/            # Allure attach, schema validate, API-prep для UI
 tests/
   ui/
   api/
-media/            # скрины, GIF
-jenkins/          # shell для CI
+media/              # скрины, GIF
+jenkins/            # shell для CI
 ```
 
 ## Локальный запуск
@@ -121,11 +154,11 @@ pytest -m ui \
 allure serve allure-results
 ```
 
-В Allure: steps, screenshot, page source, browser logs, video (Selenoid).
+В Allure: steps, screenshot, page source, browser logs, video (Selenoid), JSON Schema steps.
 
 ## Jenkins
 
-Job: https://jenkins.qa.guru/job/ZaharKr_toolshop_diploma/
+> [Ссылка на сборку в Jenkins](https://jenkins.qa.guru/job/ZaharKr_toolshop_diploma/)
 
 1. Freestyle, label `python`
 2. Git → этот репозиторий, `*/main`
@@ -149,7 +182,9 @@ Job: https://jenkins.qa.guru/job/ZaharKr_toolshop_diploma/
 
 <img src="media/testops-cases.png" width="720" alt="TestOps test cases">
 
-Jira: [MUL-80](https://jira.qa.guru/browse/MUL-80) — задача диплома + ссылка на TestOps.
+## Jira
+
+> [MUL-80](https://jira.qa.guru/browse/MUL-80) — задача диплома + ссылка на TestOps.
 
 <img src="media/jira-link.png" width="720" alt="Jira MUL-80 linked to TestOps">
 

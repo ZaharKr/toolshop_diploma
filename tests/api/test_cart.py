@@ -4,10 +4,13 @@ import pytest
 from toolshop_diploma.api.client import ApiClient
 from toolshop_diploma.models.auth import LoginRequest
 from toolshop_diploma.models.cart import AddCartItemRequest
+from toolshop_diploma.utils.validate_schema import validate_response_to_json_schema
 
 
 @allure.epic("Toolshop API")
 @allure.feature("Cart")
+@allure.story("Create and add")
+@allure.title("Create cart and add product")
 @allure.label("owner", "ZaharKr")
 @allure.label("layer", "api")
 @allure.tag("api", "regress")
@@ -24,6 +27,7 @@ def test_create_cart_and_add_product(api_client: ApiClient, demo_credentials):
         create_resp, cart = api_client.create_cart()
     assert create_resp.status_code in (200, 201)
     assert cart.id
+    validate_response_to_json_schema("cart_create.json", create_resp)
 
     with allure.step("POST /carts/{id} add item"):
         add_resp = api_client.add_to_cart(
@@ -36,10 +40,13 @@ def test_create_cart_and_add_product(api_client: ApiClient, demo_credentials):
         get_resp, cart_body = api_client.get_cart(cart.id)
     assert get_resp.status_code == 200
     assert cart_body.cart_items
+    validate_response_to_json_schema("cart.json", get_resp)
 
 
 @allure.epic("Toolshop API")
 @allure.feature("Cart")
+@allure.story("Delete")
+@allure.title("Delete product from cart then delete cart")
 @allure.label("owner", "ZaharKr")
 @allure.label("layer", "api")
 @allure.tag("api", "regress")
