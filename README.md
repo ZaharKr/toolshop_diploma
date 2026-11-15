@@ -26,6 +26,7 @@ Python · Pytest · Selenium · Requests · Pydantic · Allure · Selenoid · Je
 | Allure | https://jenkins.qa.guru/job/ZaharKr_toolshop_diploma/allure |
 | TestOps | https://allure.qa.guru/project/5432/test-cases |
 | Mobile | https://github.com/ZaharKr/mobile_tests |
+| Mobile Jenkins | https://jenkins.qa.guru/job/ZaharKr_mobile_tests/10/ |
 
 ## Содержание
 
@@ -35,6 +36,7 @@ Python · Pytest · Selenium · Requests · Pydantic · Allure · Selenoid · Je
 - [Jenkins](#jenkins)
 - [Allure Report](#allure-report)
 - [Allure TestOps](#allure-testops)
+- [Telegram](#telegram)
 - [Сценарий UI](#сценарий-ui)
 - [Mobile](#mobile)
 
@@ -147,7 +149,13 @@ Job: https://jenkins.qa.guru/job/ZaharKr_toolshop_diploma/
 
 <img src="media/testops-cases.png" width="720" alt="TestOps test cases">
 
-Jira: https://jira.qa.guru/
+Jira: https://jira.qa.guru/ (линк TestOps ↔ Jira — см. `media/jira-link.png`)
+
+## Telegram
+
+Уведомление бота после прогона (Allure chart → Telegram):
+
+<img src="media/telegram.png" width="360" alt="Telegram notification">
 
 ## Сценарий UI
 
@@ -159,3 +167,6 @@ Jira: https://jira.qa.guru/
 
 Отдельный репозиторий: [mobile_tests](https://github.com/ZaharKr/mobile_tests)  
 Appium · Wikipedia · BrowserStack + local · pydantic-конфиги.
+
+Jenkins: [#10 SUCCESS — 3 passed](https://jenkins.qa.guru/job/ZaharKr_mobile_tests/10/)  
+Allure: https://jenkins.qa.guru/job/ZaharKr_mobile_tests/10/allure
